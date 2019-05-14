@@ -13,7 +13,7 @@ variables:
   RMQ_QUEUE: urls
   DOCKER_DRIVER: overlay2
 
-build_ui:
+build_app:
   stage: build
   services:
     - docker:dind
@@ -23,7 +23,7 @@ build_ui:
     - docker login -u $DOCKER_REGISTRY_USER -p $DOCKER_REGISTRY_PASSWORD
     - docker push $DOCKER_REGISTRY_USER/crawler-app:latest && docker image rm $DOCKER_REGISTRY_USER/crawler-app:latest
 
-test_ui:
+test_app:
   stage: test
   services:
     - docker:dind
@@ -31,7 +31,7 @@ test_ui:
     - echo 'Test'
     - docker run $DOCKER_REGISTRY_USER/crawler-app:latest python -m unittest discover -s tests/
 
-staging_ui:
+staging_app:
   stage: stage
   script:
     - echo 'Publish to stage'
@@ -46,7 +46,7 @@ staging_ui:
     name: stage
     url: http://$STAGE_VM:8000
 
-production_ui:
+production_app:
   stage: production
   when: manual
   script:
